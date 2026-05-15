@@ -2,8 +2,6 @@ const {
 	Sparky,
 	isPublic
 } = require("../lib/");
-const {getString} = require('./pluginsCore');
-const lang = getString('misc');
 const config = require("../config.js");
 
 
@@ -11,7 +9,7 @@ Sparky({
 		name: "jid",
 		fromMe: isPublic,
 		category: "misc",
-		desc: lang.JID_DESC
+		desc: "Gets the unique ID of a whatsapp chat or user."
 	},
 	async ({
 		m
@@ -24,7 +22,7 @@ Sparky({
 		name: "runtime",
 		fromMe: isPublic,
 		category: "misc",
-		desc: lang.RUNTIME_DESC
+		desc: "Shows the bot's current runtime."
 	},
 	async ({
 		m
@@ -37,7 +35,7 @@ Sparky({
 		name: "ping",
 		fromMe: isPublic,
 		category: "misc",
-		desc: lang.PING_DESC
+		desc: "Checks if the bot is online and responsive."
 	},
 	async ({
 		m
@@ -57,7 +55,7 @@ Sparky({
 		name: "wame",
 		fromMe: isPublic,
 		category: "misc",
-		desc: lang.WAME_DESC
+		desc: "Converts a phone number into a whatsapp link."
 	},
 	async ({
 		m,
@@ -65,4 +63,3 @@ Sparky({
 	}) => {
 		return await m.reply(`https://wa.me/${m?.quoted ? m?.quoted?.sender?.split("@")[0] : m?.sender?.split("@")[0]}${args ? `?text=${args}` : ''}`);
 	});
-

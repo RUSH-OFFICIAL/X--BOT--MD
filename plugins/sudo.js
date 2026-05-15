@@ -1,6 +1,4 @@
 const { Sparky , isPublic } = require("../lib/");
-const {getString} = require('./pluginsCore');
-const lang = getString('sudo');
 const util = require("util");
 const axios = require("axios");
 const fetch = require("node-fetch");
@@ -57,7 +55,7 @@ m.sendMsg(m.jid , `_@${m.sender.split("@")[0]}_`  , {   mentions : [m.sender]} )
         {
             name: "setname",
             fromMe: true,
-            desc: lang.SETNAME_DESC,
+            desc: "",
             category: "sudo",
         },
         async ({client, m, args}) => {
@@ -66,7 +64,7 @@ m.sendMsg(m.jid , `_@${m.sender.split("@")[0]}_`  , {   mentions : [m.sender]} )
         args = args || m.quoted?.text;
         if (!args) return await m.reply('_Need Name!*\n*Example: setname S P A R K Y._');
         await client.updateProfileName(args);
-        await m.reply(lang.SETNAME_SUCCESS);
+        await m.reply('_Profile name updated_');
     //////////////////////
             } catch (e) {
                 console.log(e)
@@ -77,7 +75,7 @@ m.sendMsg(m.jid , `_@${m.sender.split("@")[0]}_`  , {   mentions : [m.sender]} )
         {
             name: "setbio",
             fromMe: true,
-            desc: lang.SETBIO_DESC,
+            desc: "",
             category: "sudo",
         },
         async ({client, m, args}) => {
@@ -86,7 +84,7 @@ m.sendMsg(m.jid , `_@${m.sender.split("@")[0]}_`  , {   mentions : [m.sender]} )
         args = args || m.quoted?.text;
         if (!args) return await m.reply('_Need Status!*\n*Example: setbio Hey there! I am using WhatsApp._');
         await client.updateProfileStatus(args);
-        await m.reply(lang.SETBIO_SUCCESS);
+        await m.reply('_Profile status updated_');
     //////////////////////
             } catch (e) {
                 console.log(e)
@@ -97,15 +95,15 @@ m.sendMsg(m.jid , `_@${m.sender.split("@")[0]}_`  , {   mentions : [m.sender]} )
             {
                 name: "unblock",
                 fromMe: true,
-                desc: lang.UNBLOCK_DESC,
+                desc: "",
                 category: "sudo",
             },
             async ({client, m, args}) => {
                 try{
         /////////////////////
             let jid = m.quoted.sender || m.jid;
-            await client.updateBlockStatus(jid, "unblock");
-            return m.reply(lang.UNBLOCK_SUCCESS);
+            return await client.updateBlockStatus(jid, "unblock");
+            return m.reply("_unblocked_");
         //////////////////////
                 } catch (e) {
                     console.log(e)
@@ -116,12 +114,12 @@ m.sendMsg(m.jid , `_@${m.sender.split("@")[0]}_`  , {   mentions : [m.sender]} )
         {
             name: "block",
             fromMe: true,
-            desc: lang.BLOCK_DESC,
+            desc: "",
             category: "sudo",
         },
         async ({client, m, args}) => {
        await client.updateBlockStatus(m.jid, "block");
-       return m.reply(lang.BLOCK_SUCCESS);
+       return m.reply("_blocked_");
         });
         
         Sparky(
@@ -129,18 +127,17 @@ m.sendMsg(m.jid , `_@${m.sender.split("@")[0]}_`  , {   mentions : [m.sender]} )
                 name: "fullpp",
                 fromMe: true,
                 category: "sudo",
-                desc: lang.FULLPP_DESC
+                desc: "update profile in fullpp"
             }, async ({
                     m, client, args
                 }) => {
                 try {
                     if (!m.quoted || (!m.quoted.message.imageMessage))
-                        return m.reply(getString('misc').REPLY_MEDIA);
+                        return m.reply("_Reply to an Image_");
                     let media = await m.quoted.download();
                     await updatefullpp(m.user, media, client);
-                    return await m.reply(lang.FULLPP_SUCCESS);
+                    return await m.reply("_Profile Picture Updated_");
                 } catch (e) {
                     console.log(e)
                 }
             });
-

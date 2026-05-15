@@ -3,8 +3,6 @@ const {
 	installExternalPlugins,
 	externalPlugins
 } = require('../lib');
-const {getString} = require('./pluginsCore');
-const lang = getString('sudo');
 const axios = require('axios');
 const fs = require("fs");
 
@@ -13,7 +11,7 @@ Sparky({
 	name: 'plugin',
 	fromMe: true,
 	category: 'sudo',
-	desc: lang.PLUGIN_DESC
+	desc: 'Install external plugins.'
 }, async ({
 	m,
 	args
@@ -21,7 +19,7 @@ Sparky({
 	args = args || m?.quoted?.text;
 	if (!args) return await m.reply('_Send a plugin URL or list to install._');
 	const urls = (args.match(/https?:\/\/[^\s]+/g) || []).map(url => url.includes('gist.github.com') ? url.replace('gist.github.com', 'gist.githubusercontent.com') + '/raw' : url);
-	if (!urls.length) return await m.reply(getString('download').INVALID_URL);
+	if (!urls.length) return await m.reply('_Invalid url._');
 	const installed = [];
 	for (const url of urls) {
 		try {
@@ -53,7 +51,7 @@ Sparky({
 	name: 'remove',
 	fromMe: true,
 	category: 'sudo',
-	desc: lang.REMOVE_DESC
+	desc: 'Remove external plugins.'
 }, async ({
 	m,
 	args
@@ -84,7 +82,7 @@ Sparky({
 		name: 'plugins',
 		fromMe: true,
 		category: 'sudo',
-		desc: lang.PLUGINS_DESC
+		desc: 'Lists all installed external plugins'
 	},
 	async ({
 		m
@@ -96,4 +94,3 @@ Sparky({
 		const message = plugins.map((plugin, index) => `_${index + 1}. ${plugin.dataValues.name}: ${plugin.dataValues.url}_`).join("\n");
 		return await m.reply(message);
 	});
-

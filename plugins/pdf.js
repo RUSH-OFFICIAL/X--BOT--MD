@@ -1,7 +1,7 @@
 const {Sparky, isPublic} = require("../lib");
 const {getString, getJson} = require('./pluginsCore');
 const PDFDocument = require("pdfkit");
-const lang = getString('pdf');
+const lang = getString('converters');
 let fs = require('fs');
 
 let pdfStore = {};
@@ -10,12 +10,12 @@ Sparky({
     name: "pdf",
     fromMe: isPublic,
     category: "pdf converters",
-    desc: lang.PDF_DESC,
+    desc: "Convert stored images into PDF",
 }, async ({ m, client }) => {
 
     try {
         if (!pdfStore[m.jid] || pdfStore[m.jid].length === 0) {
-            return m.reply(lang.ADDIMG_ALERT);
+            return m.reply("⚠️ No images stored");
         }
 
         await m.react("⏳");
@@ -65,7 +65,7 @@ Sparky({
     } catch (err) {
         console.log(err);
         await m.react("❌");
-        m.reply(lang.PDF_ALERT);
+        m.reply("Error creating PDF 😅");
     }
 });
 
@@ -73,11 +73,11 @@ Sparky({
     name: "addimg",
     fromMe: isPublic,
     category: "pdf converters",
-    desc: lang.ADDIMG_DESC,
+    desc: "Add image to PDF list",
 }, async ({ m }) => {
 
     if (!m.quoted || !m.quoted.message.imageMessage) {
-        return m.reply(lang.ADDIMG_ALERT);
+        return m.reply("_Reply to an image_");
     }
 
     await m.react("⏳");
@@ -92,19 +92,19 @@ Sparky({
     });
 
     await m.react("🍻");
-    m.reply(`${lang.ADDIMG_SUCCESS}\n${pdfStore[m.jid].length}`);
+    m.reply(`_🖼️ Image added\n${pdfStore[m.jid].length}_`);
 });
 
 Sparky({
     name: "addtext",
     fromMe: isPublic,
     category: "pdf converters",
-    desc: lang.ADDTEXT_DESC,
+    desc: "Add text to PDF",
 }, async ({ m }) => {
 
     const text = m.quoted?.text || m.text.split(" ").slice(1).join(" ");
 
-    if (!text) return m.reply(lang.ADDTEXT_ALERT);
+    if (!text) return m.reply("_Provide or reply to text_");
 
     if (!pdfStore[m.jid]) pdfStore[m.jid] = [];
 
@@ -113,15 +113,15 @@ Sparky({
         content: text
     });
 
-    m.reply(`${lang.ADDTEXT_SUCCESS}\n${pdfStore[m.jid].length}`);
+    m.reply(`_📝 Text added\n${pdfStore[m.jid].length}_`);
 });
 
 Sparky({
     name: "clear",
     fromMe: isPublic,
     category: "pdf converters",
-    desc: lang.CLEAR_DESC,
+    desc: "Clear stored images",
 }, async ({ m }) => {
     pdfStore[m.jid] = [];
-    m.reply(lang.CLEAR_SUCCESS);
+    m.reply("_🗑️ Cleared stored images_");
 });
